@@ -1,0 +1,17 @@
+
+<#added the bearer and the content type to the header#>
+$headers = @{}
+$headers.Add("Content-Type", "application/json")
+$headers.Add("Authorization", "Bearer VqMBNIOyImZ_W-T4HIYOq93vnuWozOrNSR4NcsNA")
+<#formated the date to year-month-date format#>
+$time = (Get-Date).ToString("yyyy-MM-dd")
+<#made the API call to the radar ranking and stored the result in a  response variable #>
+$response = Invoke-RestMethod -Method Get -Uri "https://api.cloudflare.com/client/v4/radar/ranking/top?limit=100&name=main_series&location=US=$($time)" -Headers $headers
+<# converted it to JSON data#>
+$response | ConvertTo-Json
+<#displayed the domain name and the rank#>
+$response.result.main_series
+<#stored the domain names and rank in a variable#>
+$domainNamesAndRank = $response.result.main_series
+<#exported the data to csv file#>
+$domainNamesAndRank | Export-CSV C:\DomainNamesAndRank.csv
